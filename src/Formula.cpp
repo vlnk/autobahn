@@ -30,7 +30,7 @@ lua_State* Formula::getLuaState() {
   luaL_openlibs(_lua); /* Load Lua libraries */
 
   /* Load the file containing the script we are going to run */
-  int status = luaL_dofile(_lua, "../formulas/perl.lua");
+  int status = luaL_dofile(_lua, "../languages/perl.lua");
   if (status) {
     std::string lua_load_file_error(lua_tostring(_lua, -1));
     throw LuaException("couldn't load file: " + lua_load_file_error);
