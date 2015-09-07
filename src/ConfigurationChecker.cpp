@@ -3,11 +3,11 @@
 static const std::string HOME = "HOME";
 
 const std::string default_scripts_dir = "Scripts";
-const std::string default_config_dir = ".autoban";
+const std::string default_config_dir = ".autobahn";
 const std::string config_file = "config.yaml";
 const std::string data_file = "data.yaml";
 
-const std::vector<std::string> languages {"PERL"};
+const std::vector<std::string> init_languages {"PERL", "RUBY", "LUA", "PYTHON2"};
 
 ConfigurationChecker::ConfigurationChecker() {
   #ifdef CONFIG_DIR
@@ -36,6 +36,17 @@ bool ConfigurationChecker::isInitialized() {
   return exists(config_file_path);
 }
 
+bool ConfigurationChecker::checkLanguage(const std::string& lang) const {
+  std::vector<std::string> langs = loadLanguages();
+  bool isCheckedLang = false;
+
+  if (std::find(langs.begin(), langs.end(), lang) != langs.end()) {
+      isCheckedLang = true;
+  }
+
+  return isCheckedLang;
+}
+
 void ConfigurationChecker::initializeConfiguration(std::vector<std::string> args) {
   if (args.size() == 3) {
     if (exists(args[1]) && exists(args[2])) {
@@ -57,11 +68,15 @@ void ConfigurationChecker::initializeConfiguration(std::vector<std::string> args
 
   config_file.open(config_file_path.string());
 
+  YAML::Node config_node;
+  config_node["DIRECTORY"] = _scripts_dir.string();
+
+  for (const std::string& lang : init_languages) {
+    config_node["LANGUAGES"].push_back(lang);
+  }
+
   YAML::Emitter config_out;
-  config_out << YAML::BeginMap;
-  config_out << YAML::Key << "DIRECTORY";
-  config_out << YAML::Value << _scripts_dir.string();
-  config_out << YAML::EndMap;
+  config_out << config_node;
 
   config_file << config_out.c_str();
   config_file.close();
@@ -81,6 +96,30 @@ void ConfigurationChecker::initializeConfiguration(std::vector<std::string> args
 YAML::Node ConfigurationChecker::loadData() const {
   path data_file_path = path(_config_dir).append('/' + data_file);
   return YAML::LoadFile(data_file_path.string());
+}
+
+YAML::Node ConfigurationChecker::loadConfig() const {
+  path config_file_path = path(_config_dir).append('/' + config_file);
+  return YAML::LoadFile(config_file_path.string());
+}
+
+const std::vector<std::string> ConfigurationChecker::loadLanguages() const {
+  path config_file_path = path(_config_dir).append('/' + config_file);
+  YAML::Node config_tree = YAML::LoadFile(config_file_path.string());
+
+  YAML::Node lang_tree = config_tree["LANGUAGES"];
+  std::vector<std::string> langs;
+
+  if (lang_tree.IsSequence()) {
+    for (auto it_seq = lang_tree.begin() ; it_seq != lang_tree.end(); it_seq++) {
+      langs.push_back((*it_seq).as<std::string>());
+    }
+  }
+  else {
+    throw InitializationException("Languages are not initialized!");
+  }
+
+  return langs;
 }
 
 void ConfigurationChecker::saveData(const YAML::Node& node) const {
@@ -106,14 +145,8 @@ void ConfigurationChecker::list() {
   YAML::Node data = loadData();
 
   for (auto it = data.begin(); it != data.end(); it++) {
-    if (std::find(languages.begin(), languages.end(), it->first.as<std::string>()) != languages.end()) {
+    if (std::find(init_languages.begin(), init_languages.end(), it->first.as<std::string>()) != init_languages.end()) {
       YAML::Node seq = it->second;
-
-/*
-      if (!seq.IsSequence()) {
-        throw std::exception("bad data...")
-      }
-*/
 
       std::cout << lang << it->first.as<std::string>() << def << std::endl;
 

@@ -1,5 +1,5 @@
-#ifndef __script_center_ConfigurationChecker__
-#define __script_center_ConfigurationChecker__
+#ifndef __AUTOBAN_CONFIGURATIONCHECKER__
+#define __AUTOBAN_CONFIGURATIONCHECKER__
 
 #include <iostream>
 #include <fstream>
@@ -25,10 +25,15 @@ public:
   void initializeConfiguration(std::vector<std::string>);
 
   YAML::Node loadData() const;
+  YAML::Node loadConfig() const;
+
+  const std::vector<std::string> loadLanguages() const;
   void saveData(const YAML::Node&) const;
 
   void clean();
   void list();
+
+  bool checkLanguage(const std::string&) const;
 
   const path& getScriptDirPath() const { return _scripts_dir; };
 

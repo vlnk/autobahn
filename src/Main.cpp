@@ -6,6 +6,7 @@
 #include "ConfigurationChecker.hpp"
 #include "commands/Push.hpp"
 #include "exceptions/InitializationException.hpp"
+#include "Formula.hpp"
 
 void usage(std::string prog_name) {
   Color::Painter def(Color::FG_DEFAULT);
@@ -23,7 +24,7 @@ void help(std::string prog_name) {
   std::cout << opt << "push | -p <file> <name> <lang>" << def;
   std::cout << " push file script into scripts directory" << std::endl;
   std::cout << opt << "export | -e <file>" << def << " export scripts NOT WORKING" << std::endl;
-  std::cout << opt << "exec | -x <script name>" << def << " execute script in current directory NOT WORKING" << std::endl;
+  std::cout << opt << "exec | -x <script name>" << def << " execute script in current directory" << std::endl;
   std::cout << opt << "clean | -c" << def << " clean all data and configuration." << std::endl;
   std::cout << opt << "init | -i <*config dir> <*script dir>" << def << " (default: ~/.autoban ~/Scripts)" << std::endl;
 }
@@ -38,7 +39,7 @@ int main(int argc, char const *argv[]) {
   }
   else {
     std::vector<std::string> args(argv + 1, argv + argc);
-    std::string prog_name("autoban");
+    std::string prog_name("autobahn");
 
     try {
       ConfigurationChecker checker;
@@ -74,6 +75,20 @@ int main(int argc, char const *argv[]) {
       /*** LIST ***/
       else if ((args[0].compare("list") == 0) || (args[0].compare("-l")) == 0) {
         checker.list();
+      }
+
+      /*** EXEC ***/
+      else if ((args[0].compare("exec") == 0) || (args[0].compare("-x")) == 0) {
+        if (args.size() != 2) {
+          throw std::invalid_argument("Incorrect 'Exec' parameters.");
+        }
+
+        try {
+          auto formula = Formula::getFormula(args[1], checker);
+        }
+        catch (LuaException& e) {
+          std::cerr << err << e.what() << def << std::endl;
+        }
       }
 
       /*** USAGE ***/

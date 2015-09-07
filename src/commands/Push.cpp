@@ -6,6 +6,10 @@ void Pusher::push(const ConfigurationChecker& conf) {
   path from(_script_file);
   path to(conf.getScriptDirPath().string() + '/' + _script_name);
 
+  if (!conf.checkLanguage(_script_lang)) {
+    throw std::invalid_argument("Incorrect script language.");
+  }
+
   if (exists(from)) {
     copy_file(from, to);
 

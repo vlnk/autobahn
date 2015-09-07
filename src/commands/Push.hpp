@@ -1,5 +1,5 @@
-#ifndef __script_center_Push__
-#define __script_center_Push__
+#ifndef __AUTOBAN_PUSH__
+#define __AUTOBAN_PUSH__
 
 #include <iostream>
 #include <string>

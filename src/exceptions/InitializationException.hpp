@@ -1,5 +1,5 @@
-#ifndef __irc_simulator__InitializationException__
-#define __irc_simulator__InitializationException__
+#ifndef __AUTOBAN__INITIALIZATIONEXCEPTION__
+#define __AUTOBAN__INITIALIZATIONEXCEPTION__
 
 #include <iostream>
 #include <exception>

@@ -1,5 +1,5 @@
-#ifndef __irc_simulator__Color__
-#define __irc_simulator__Color__
+#ifndef __AUTOBAN__COLOR__
+#define __AUTOBAN__COLOR__
 
 #include <ostream>
 namespace Color {
