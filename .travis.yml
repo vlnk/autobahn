@@ -7,8 +7,6 @@ before_install:
   - brew install boost
   - brew install lua
 
-install: pip install codecov
-
 before_script:
   - mkdir build
   - cd build
@@ -16,7 +14,5 @@ before_script:
 
 script:
   - make
-
-after_success: codecov
 
 os: osx
