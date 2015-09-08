@@ -1,5 +1,5 @@
-#ifndef __AUTOBAN__COLOR__
-#define __AUTOBAN__COLOR__
+#ifndef __AUTOBAHN__COLOR__
+#define __AUTOBAHN__COLOR__
 
 #include <ostream>
 namespace Color {

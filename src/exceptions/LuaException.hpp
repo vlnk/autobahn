@@ -1,5 +1,5 @@
-#ifndef __AUTOBAN__LUAEXCEPTION__
-#define __AUTOBAN__LUAEXCEPTION__
+#ifndef __AUTOBAHN__LUAEXCEPTION__
+#define __AUTOBAHN__LUAEXCEPTION__
 
 #include <iostream>
 #include <exception>

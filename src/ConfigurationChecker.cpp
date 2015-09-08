@@ -29,6 +29,12 @@ ConfigurationChecker::ConfigurationChecker() {
       _scripts_dir = path(home + '/' + default_scripts_dir);
     }
   #endif
+
+  #ifdef LANGUAGES_DIR
+    _languages_dir = path(LANGUAGES_DIR);
+  #else
+    throw InitializationException("unable to find source path");
+  #endif
 }
 
 bool ConfigurationChecker::isInitialized() {
@@ -70,6 +76,15 @@ void ConfigurationChecker::initializeConfiguration(std::vector<std::string> args
 
   YAML::Node config_node;
   config_node["DIRECTORY"] = _scripts_dir.string();
+
+  if (exists(_languages_dir) && is_directory(_languages_dir)) {
+    auto directory_it = directory_iterator(_languages_dir);
+    for (auto it = begin(directory_it); it != end(directory_it); it++) {
+      if (is_regular_file(*it)) {
+        std::cout << *it << std::endl;
+      }
+    }
+  }
 
   for (const std::string& lang : init_languages) {
     config_node["LANGUAGES"].push_back(lang);
@@ -156,5 +171,34 @@ void ConfigurationChecker::list() {
 
     }
   }
+}
 
+YAML::Node ConfigurationChecker::isValidScript(const std::string& script_name) const {
+  std::string script_lang;
+  YAML::Node data_tree = loadData();
+  YAML::Node script_info;
+  bool isValid = false;
+
+  for (auto it = data_tree.begin(); it != data_tree.end(); it++) {
+    if ((it->second).IsSequence()) {
+
+      script_lang = (it->first).as<std::string>();
+
+      for (auto it_seq = (it->second).begin(); it_seq != (it->second).end(); it_seq++) {
+        if (script_name.compare((*it_seq)["name"].as<std::string>()) == 0) {
+          script_info["name"] = (*it_seq)["name"];
+          script_info["lang"] = script_lang;
+          script_info["path"] = (*it_seq)["path"];
+
+          isValid = true;
+          break;
+        }
+      }
+    }
+  }
+
+  if (!isValid) {
+    throw invalid_argument("invalid script name!");
+  }
+  return script_info;
 }

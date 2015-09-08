@@ -1,5 +1,5 @@
-#ifndef __AUTOBAN_PUSH__
-#define __AUTOBAN_PUSH__
+#ifndef __AUTOBAHN_PUSH__
+#define __AUTOBAHN_PUSH__
 
 #include <iostream>
 #include <string>

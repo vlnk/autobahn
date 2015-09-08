@@ -6,7 +6,7 @@
 #include "ConfigurationChecker.hpp"
 #include "commands/Push.hpp"
 #include "exceptions/InitializationException.hpp"
-#include "Formula.hpp"
+#include "FormulaManager.hpp"
 
 void usage(std::string prog_name) {
   Color::Painter def(Color::FG_DEFAULT);
@@ -45,7 +45,7 @@ int main(int argc, char const *argv[]) {
       ConfigurationChecker checker;
 
       /*** INITIALIZATION ***/
-      if ((args[0].compare("init") == 0) || (args[0].compare("-i")) == 0) {
+      if (args[0].compare("init") == 0) {
         checker.initializeConfiguration(args);
       }
       else if (!checker.isInitialized()) {
@@ -53,13 +53,13 @@ int main(int argc, char const *argv[]) {
       }
 
       /*** HELP ***/
-      else if ((args[0].compare("help") == 0) || (args[0].compare("-h")) == 0) {
+      else if (args[0].compare("help") == 0) {
         usage(prog_name);
         help(prog_name);
       }
 
       /*** PUSH ***/
-      else if ((args[0].compare("push") == 0) || (args[0].compare("-p")) == 0) {
+      else if (args[0].compare("push") == 0) {
         Pusher* pusher = Pusher::checkPushArguments(args);
         std::cout << *pusher;
 
@@ -68,23 +68,34 @@ int main(int argc, char const *argv[]) {
       }
 
       /*** CLEAN ***/
-      else if ((args[0].compare("clean") == 0) || (args[0].compare("-c")) == 0) {
+      else if (args[0].compare("clean") == 0) {
         checker.clean();
       }
 
       /*** LIST ***/
-      else if ((args[0].compare("list") == 0) || (args[0].compare("-l")) == 0) {
+      else if (args[0].compare("list") == 0) {
         checker.list();
       }
 
+      /*** RENAME ***/
+      else if (args[0].compare("rename") == 0) {
+        YAML::Node script_info = checker.isValidScript(args[1]);
+      }
+
       /*** EXEC ***/
-      else if ((args[0].compare("exec") == 0) || (args[0].compare("-x")) == 0) {
+      else if (args[0].compare("exec") == 0) {
         if (args.size() != 2) {
-          throw std::invalid_argument("Incorrect 'Exec' parameters.");
+          throw std::invalid_argument("incorrect 'exec' parameters.");
         }
 
+          YAML::Node script_info = checker.isValidScript(args[1]);
+          std::string script_lang = script_info["lang"].as<std::string>();
+          std::string lang_dir = checker.getLangDirPath().c_str();
+          FormulaManager formula_manager = FormulaManager();
+
         try {
-          auto formula = Formula::getFormula(args[1], checker);
+          formula_manager.getLuaStateForLanguages(lang_dir, script_lang);
+          formula_manager.execute(script_info["path"].as<std::string>());
         }
         catch (LuaException& e) {
           std::cerr << err << e.what() << def << std::endl;

@@ -7,7 +7,7 @@ function perl:new ()
 end
 
 function perl:getInfo ()
-  print(self.lang)
+  return self.lang
 end
 
 function perl:execute (script_path)

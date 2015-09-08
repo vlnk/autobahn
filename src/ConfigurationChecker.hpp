@@ -1,5 +1,5 @@
-#ifndef __AUTOBAN_CONFIGURATIONCHECKER__
-#define __AUTOBAN_CONFIGURATIONCHECKER__
+#ifndef __AUTOBAHN_CONFIGURATIONCHECKER__
+#define __AUTOBAHN_CONFIGURATIONCHECKER__
 
 #include <iostream>
 #include <fstream>
@@ -16,6 +16,7 @@ class ConfigurationChecker {
 private:
   path _config_dir;
   path _scripts_dir;
+  path _languages_dir;
 
 public:
   ConfigurationChecker ();
@@ -34,8 +35,10 @@ public:
   void list();
 
   bool checkLanguage(const std::string&) const;
+  YAML::Node isValidScript(const std::string&) const;
 
   const path& getScriptDirPath() const { return _scripts_dir; };
+  const path& getLangDirPath() const { return _languages_dir; };
 
   friend std::ostream& operator << (std::ostream& os, const ConfigurationChecker& conf) {
     Color::Painter def(Color::FG_DEFAULT);
