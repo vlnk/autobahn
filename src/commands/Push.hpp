@@ -9,29 +9,29 @@
 #include <boost/filesystem.hpp>
 #include <yaml-cpp/yaml.h>
 
+#include "Command.hpp"
 #include "../Color.hpp"
 #include "../ConfigurationChecker.hpp"
 
-class Pusher {
+namespace fs = boost::filesystem;
+
+class Push : public Command {
 private:
   std::string _script_file;
   std::string _script_name;
   std::string _script_lang;
+  const ConfigurationChecker& _conf;
 
-  YAML::Node getMetaData(const path&);
+  YAML::Node getMetaData(const fs::path&);
+  void checkArguments(const std::vector<std::string>&);
 
 public:
-  Pusher(std::string script_file, std::string script_name, std::string script_lang):
-    _script_file(script_file),
-    _script_name(script_name),
-    _script_lang(script_lang) {};
+  Push(const std::vector<std::string>&, const ConfigurationChecker&);
+  ~Push() {};
 
-  ~Pusher() {};
+  void run();
 
-  static Pusher* checkPushArguments(std::vector<std::string>);
-  void push(const ConfigurationChecker&);
-
-  friend std::ostream& operator << (std::ostream& os, const Pusher& push) {
+  friend std::ostream& operator << (std::ostream& os, const Push& push) {
     Color::Painter def(Color::FG_DEFAULT);
     Color::Painter opt(Color::FG_BLUE);
 

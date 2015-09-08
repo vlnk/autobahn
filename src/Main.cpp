@@ -4,7 +4,10 @@
 
 #include "Color.hpp"
 #include "ConfigurationChecker.hpp"
+
 #include "commands/Push.hpp"
+#include "commands/Rename.hpp"
+
 #include "exceptions/InitializationException.hpp"
 #include "FormulaManager.hpp"
 
@@ -60,11 +63,10 @@ int main(int argc, char const *argv[]) {
 
       /*** PUSH ***/
       else if (args[0].compare("push") == 0) {
-        Pusher* pusher = Pusher::checkPushArguments(args);
-        std::cout << *pusher;
+        Push p = Push(args, checker);
+        std::cout << p;
 
-        pusher->push(checker);
-        delete pusher;
+        p.run();
       }
 
       /*** CLEAN ***/
@@ -79,7 +81,9 @@ int main(int argc, char const *argv[]) {
 
       /*** RENAME ***/
       else if (args[0].compare("rename") == 0) {
-        YAML::Node script_info = checker.isValidScript(args[1]);
+        YAML::Node script_info = checker.getScriptInfo(args[1]);
+        Rename r = Rename(args, checker);
+        r.run();
       }
 
       /*** EXEC ***/
@@ -88,7 +92,7 @@ int main(int argc, char const *argv[]) {
           throw std::invalid_argument("incorrect 'exec' parameters.");
         }
 
-          YAML::Node script_info = checker.isValidScript(args[1]);
+          YAML::Node script_info = checker.getScriptInfo(args[1]);
           std::string script_lang = script_info["lang"].as<std::string>();
           std::string lang_dir = checker.getLangDirPath().c_str();
           FormulaManager formula_manager = FormulaManager();
