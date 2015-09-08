@@ -1,3 +1,19 @@
 language: cpp
 compiler: clang
+
+before_install:
+  - brew update
+  - brew install cmake
+  - brew install yaml-cpp
+  - brew install boost
+  - brew install lua
+
+before_script:
+  - mkdir build
+  - cd build
+  - cmake ..
+
+script:
+  - make
+
 os: osx
