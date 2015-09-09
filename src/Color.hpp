@@ -3,8 +3,7 @@
 
 #include <ostream>
 namespace Color {
-  enum Code
-  {
+  enum Code {
     FG_RED      = 31,
     FG_GREEN    = 32,
     FG_YELLOW   = 33,

@@ -1,7 +1,7 @@
 #include "Push.hpp"
 
 Push::Push(const std::vector<std::string>& args, const ConfigurationChecker& conf):
-  _conf(conf) {
+Command(conf) {
   checkArguments(args);
 }
 

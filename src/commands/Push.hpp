@@ -11,7 +11,6 @@
 
 #include "Command.hpp"
 #include "../Color.hpp"
-#include "../ConfigurationChecker.hpp"
 
 namespace fs = boost::filesystem;
 
@@ -20,7 +19,6 @@ private:
   std::string _script_file;
   std::string _script_name;
   std::string _script_lang;
-  const ConfigurationChecker& _conf;
 
   YAML::Node getMetaData(const fs::path&);
   void checkArguments(const std::vector<std::string>&);

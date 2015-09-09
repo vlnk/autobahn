@@ -187,7 +187,7 @@ void ConfigurationChecker::updateData(const YAML::Node& node) const {
 
   data_file.open(data_file_path.string());
   data_file.clear();
-  
+
   YAML::Emitter data_out;
   data_out << node;
 

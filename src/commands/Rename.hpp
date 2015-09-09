@@ -13,8 +13,6 @@ private:
   std::string _old_script_name;
   std::string _new_script_name;
 
-  const ConfigurationChecker& _conf;
-
   void checkArguments(const std::vector<std::string>&);
 
 public:

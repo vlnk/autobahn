@@ -1,7 +1,7 @@
 #include "Rename.hpp"
 
 Rename::Rename(const std::vector<std::string>& args, const ConfigurationChecker& conf):
-_conf(conf) {
+Command(conf) {
   checkArguments(args);
 }
 
