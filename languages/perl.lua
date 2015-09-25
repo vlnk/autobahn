@@ -1,16 +1,16 @@
-local perl = {}
+local PERL = {}
 
-function perl:new ()
+function PERL:new ()
   local newObj = {lang = 'PERL', interpretor = 'perl'}
   self.__index = self
   return setmetatable(newObj, self)
 end
 
-function perl:getInfo ()
+function PERL:getInfo ()
   return self.lang
 end
 
-function perl:execute (script_path)
+function PERL:execute (script_path)
   os.execute(self.interpretor .. ' ' .. script_path)
 end
 

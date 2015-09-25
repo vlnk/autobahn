@@ -84,7 +84,10 @@ const std::vector<const std::string> ConfigurationChecker::getLanguages() const 
     for (auto it = begin(directory_it); it != end(directory_it); it++) {
       if (fs::is_regular_file(*it)) {
         fs::path file_name = fs::path(*it);
-        languages.push_back(file_name.stem().string());
+
+        std::string language = file_name.stem().string();
+        std::transform(language.begin(), language.end(), language.begin(), ::toupper);
+        languages.push_back(language);
       }
     }
   }

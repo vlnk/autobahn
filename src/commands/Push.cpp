@@ -6,7 +6,7 @@ Command(conf) {
 }
 
 void Push::run() {
-  std::transform(_script_lang.begin(), _script_lang.end(), _script_lang.begin(), ::tolower);
+  std::transform(_script_lang.begin(), _script_lang.end(), _script_lang.begin(), ::toupper);
 
   fs::path from(_script_file);
   fs::path to(_conf.getScriptDirPath().string() + '/' + _script_name);

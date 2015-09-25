@@ -30,7 +30,6 @@ void Execute::run() {
   catch (LuaException& e) {
     ostringstream msg;
     msg << "LUA ERROR: " << e.what();
-
     throw std::logic_error(msg.str());
   }
 }

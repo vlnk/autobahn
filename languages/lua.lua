@@ -1,16 +1,16 @@
-local lua = {}
+local LUA = {}
 
-function lua:new ()
+function LUA:new ()
   local newObj = {lang = 'LUA', interpretor = 'lua'}
   self.__index = self
   return setmetatable(newObj, self)
 end
 
-function lua:getInfo ()
+function LUA:getInfo ()
   return self.lang
 end
 
-function lua:execute (script_path)
+function LUA:execute (script_path)
   os.execute(self.interpretor .. ' ' .. script_path)
 end
 

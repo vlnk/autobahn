@@ -1,5 +1,9 @@
-cmake_minimum_required(VERSION 2.8.4)
-project(autobahn)
+cmake_minimum_required(VERSION 3.0.2)
+
+include(FindPackageHandleStandardArgs)
+
+set(PROJECT_NAME auto)
+project( ${PROJECT_NAME} )
 
 ############################################################
 #### CONFIGURE CMAKE VARIABLES
@@ -7,7 +11,12 @@ project(autobahn)
 set (
   CMAKE_MODULE_PATH
   ${CMAKE_MODULE_PATH}
-  "${CMAKE_CURRENT_SOURCE_DIR}/cmake/"
+  "${CMAKE_CURRENT_SOURCE_DIR}/CMakeModules/"
+)
+
+set (
+  EXECUTABLE_OUTPUT_PATH
+  "${CMAKE_CURRENT_SOURCE_DIR}/bin/"
 )
 
 ############################################################
@@ -41,44 +50,12 @@ add_definitions( -DLANGUAGES_DIR="${CMAKE_CURRENT_SOURCE_DIR}/languages" )
 #### SET CONFIGURATION VARS
 ############################################################
 set( CMAKE_VERBOSE_MAKEFILE off )
-set ( EXECUTABLE_OUTPUT_PATH ../bin )
 set ( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11" )
 
 ############################################################
-#### FIND BOOST INCLUDES
-find_package(Boost 1.58.0 COMPONENTS system filesystem REQUIRED)
-
-if(Boost_FOUND)
-  message(STATUS "Found Boost includes: ${Boost_VERSION}")
-else()
-  message(FATAL_ERROR "Could not find Boost includes!")
-endif()
-
-find_package( yaml-cpp )
-find_package( unittest-cpp )
-find_package( lua )
-
+#### ADD SUBDIRECTORIES
 ############################################################
-#### INCLUDE EXTERNAL DIRECTORIES (BOOST, YAML-CPP, UNITTEST-CPP)
-include_directories( ${Boost_INCLUDE_DIRS} )
-include_directories( ${YAMLCPP_INCLUDE_DIRS} )
-include_directories( ${LUA_INCLUDE_DIRS} )
+add_subdirectory( src )
 
-############################################################
-#### GET PROJECT SOURCES
-file (
-  GLOB_RECURSE
-  SOURCE_FILES
-  src/*
-)
-
-############################################################
-#### ADD EXECUTABLE
-add_executable ( autobahn ${SOURCE_FILES} )
-
-############################################################
-#### LINK LIBRARIES
-target_link_libraries( autobahn ${Boost_LIBRARIES} )
-target_link_libraries( autobahn ${YAMLCPP_LIBRARY} )
-target_link_libraries( autobahn ${UNITTESTCPP_LIBRARY} )
-target_link_libraries( autobahn ${LUA_LIBRARY} )
+include(CTest)
+add_subdirectory( tests )
