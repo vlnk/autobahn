@@ -42,6 +42,7 @@ set_property (
 ############################################################
 #### SET BUILD VARIABLES
 ############################################################
+add_definitions( -DPROJECT_NAME="${PROJECT_NAME}" )
 add_definitions( -DCONFIG_DIR="/Users/vlnk/.autobahn" )
 add_definitions( -DSCRIPTS_DIR="/Users/vlnk/Scripts" )
 add_definitions( -DLANGUAGES_DIR="${CMAKE_CURRENT_SOURCE_DIR}/languages" )
